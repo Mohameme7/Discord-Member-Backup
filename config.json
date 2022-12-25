@@ -1,0 +1,7 @@
+{
+  "ClientID" : 123,
+  "ClientSecret" : "123",
+  "BotToken" : "token",
+  "APIEndpoint" : "https://discord.com/api/v9",
+  "GuildID" : 123
+}
