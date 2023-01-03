@@ -1,18 +1,15 @@
-import json
-import sys
-import httpx
-from colorama import Fore
-from utils import UtilsObject
-Config = UtilsObject.LoadJson()
+
+from utils import *
+Config = LoadJson()
 ClientID = Config['ClientID']
 ClientSecret = Config['ClientSecret']
 BotToken = Config['BotToken']
 APIEndpoint = Config['APIEndpoint']
-
+GuildID = Config['GuildID']
 
 class AuthMethods:
     @staticmethod
-    def exchange_code(code):
+    async def exchange_code(Client, code):
         data = {
             'client_id': ClientID,
             'client_secret': ClientSecret,
@@ -23,12 +20,11 @@ class AuthMethods:
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-        r = httpx.post('%s/oauth2/token' % APIEndpoint, data=data, headers=headers)
-        print(r.json())
-        return (r.json(), r.is_success)
+        r = await Client.post('%s/oauth2/token' % APIEndpoint, data=data, headers=headers)
+        return (r.json()), r.is_success
 
     @staticmethod
-    def add_to_guild(access_token, userID, guildID):
+    async def add_to_guild(Client, access_token, userID, guildID):
         url = f"{APIEndpoint}/guilds/{guildID}/members/{userID}"
         data = {
             "access_token": access_token,
@@ -37,11 +33,11 @@ class AuthMethods:
             "Authorization": f"Bot {BotToken}",
             'Content-Type': 'application/json'
         }
-        response = httpx.put(url=url, headers=headers, json=data)
-        return response.status_code
+        request = await Client.put(url=url, headers=headers, json=data)
+        return request.is_success
 
     @staticmethod
-    def refresh_token(refresh_token):
+    async def refresh_token(Client, refresh_token):
         data = {
             'client_id': ClientID,
             'client_secret': ClientSecret,
@@ -51,12 +47,10 @@ class AuthMethods:
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-        r = httpx.post('%s/oauth2/token' % APIEndpoint, data=data, headers=headers)
-        print(r.json(), "refdsads")
-        return r.json()
+        r = await Client.post('%s/oauth2/token' % APIEndpoint, data=data, headers=headers)
+        return r.json(), r.is_success
 
     @staticmethod
-    def get_user_info(Access_Token):
-        request = httpx.get('https://discord.com/api/v9/users/@me', headers={"Authorization": f"Bearer {Access_Token}"})
-        print(request.json())
+    async def get_user_info(Client, Access_Token):
+        request = await Client.get('https://discord.com/api/v9/users/@me', headers={"Authorization": f"Bearer {Access_Token}"})
         return request.json()
