@@ -8,5 +8,5 @@ def log(message: str):
 
 def LoadJson():
     with open('config.json', 'r') as f:
-        return json.loads(f.read())
+        return json.load(f)
 
