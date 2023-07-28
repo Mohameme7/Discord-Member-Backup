@@ -16,3 +16,4 @@ Steps:
 
 ## Note
 If you ever need to pull the members again or restore them in another server you can just change the Guild ID in config.json, and run this command: `/RestoreMembers`
+You'll also need to setup up a deployment sever and change things in code, here's a guide for that https://flask.palletsprojects.com/en/2.3.x/deploying/
